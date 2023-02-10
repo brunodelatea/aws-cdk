@@ -1,0 +1,166 @@
+{
+  "version": "29.0.0",
+  "artifacts": {
+    "RoughHomeworkStack.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "RoughHomeworkStack.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "RoughHomeworkStack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://unknown-account/unknown-region",
+      "properties": {
+        "templateFile": "RoughHomeworkStack.template.json",
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/f7caabf9d73dcf1750e6f48219df0abd1532a2711434b12d56acdaab309a65dd.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "RoughHomeworkStack.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-lookup-role-${AWS::AccountId}-${AWS::Region}",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "RoughHomeworkStack.assets"
+      ],
+      "metadata": {
+        "/RoughHomeworkStack/HelloLambda/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "HelloLambdaServiceRoleE071F162"
+          }
+        ],
+        "/RoughHomeworkStack/HelloLambda/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "HelloLambda3D9C82D6"
+          }
+        ],
+        "/RoughHomeworkStack/newOrder/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "newOrderServiceRole0EF5CC83"
+          }
+        ],
+        "/RoughHomeworkStack/newOrder/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "newOrder9C6E636A"
+          }
+        ],
+        "/RoughHomeworkStack/example-api/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "exampleapi2D2ED469"
+          }
+        ],
+        "/RoughHomeworkStack/example-api/Deployment/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "exampleapiDeploymentA1494E3B64d02fd9ca8c40d65898cc1aae891d84"
+          }
+        ],
+        "/RoughHomeworkStack/example-api/DeploymentStage.prod/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "exampleapiDeploymentStageprodE9D13C13"
+          }
+        ],
+        "/RoughHomeworkStack/example-api/Endpoint": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "exampleapiEndpoint9C2B6BF5"
+          }
+        ],
+        "/RoughHomeworkStack/example-api/Default/hello/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "exampleapihello9FEE94A5"
+          }
+        ],
+        "/RoughHomeworkStack/example-api/Default/hello/GET/ApiPermission.RoughHomeworkStackexampleapi9DB15276.GET..hello": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "exampleapihelloGETApiPermissionRoughHomeworkStackexampleapi9DB15276GEThelloC366EA4A"
+          }
+        ],
+        "/RoughHomeworkStack/example-api/Default/hello/GET/ApiPermission.Test.RoughHomeworkStackexampleapi9DB15276.GET..hello": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "exampleapihelloGETApiPermissionTestRoughHomeworkStackexampleapi9DB15276GEThelloCD362683"
+          }
+        ],
+        "/RoughHomeworkStack/example-api/Default/hello/GET/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "exampleapihelloGET283B9A10"
+          }
+        ],
+        "/RoughHomeworkStack/example-api/Default/new-order/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "exampleapineworderFC94C1B0"
+          }
+        ],
+        "/RoughHomeworkStack/example-api/Default/new-order/GET/ApiPermission.RoughHomeworkStackexampleapi9DB15276.GET..new-order": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "exampleapineworderGETApiPermissionRoughHomeworkStackexampleapi9DB15276GETneworder7CCF0061"
+          }
+        ],
+        "/RoughHomeworkStack/example-api/Default/new-order/GET/ApiPermission.Test.RoughHomeworkStackexampleapi9DB15276.GET..new-order": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "exampleapineworderGETApiPermissionTestRoughHomeworkStackexampleapi9DB15276GETneworder73A64C0D"
+          }
+        ],
+        "/RoughHomeworkStack/example-api/Default/new-order/GET/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "exampleapineworderGET18F49A6B"
+          }
+        ],
+        "/RoughHomeworkStack/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/RoughHomeworkStack/CDKMetadata/Condition": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadataAvailable"
+          }
+        ],
+        "/RoughHomeworkStack/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/RoughHomeworkStack/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "RoughHomeworkStack"
+    },
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    }
+  }
+}

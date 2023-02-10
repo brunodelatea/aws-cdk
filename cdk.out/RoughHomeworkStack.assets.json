@@ -1,0 +1,32 @@
+{
+  "version": "29.0.0",
+  "files": {
+    "2849533a44759cd5762ea77402266bd3b146bca063fbf2fa2098d822fe1f11d0": {
+      "source": {
+        "path": "asset.2849533a44759cd5762ea77402266bd3b146bca063fbf2fa2098d822fe1f11d0",
+        "packaging": "zip"
+      },
+      "destinations": {
+        "current_account-current_region": {
+          "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}",
+          "objectKey": "2849533a44759cd5762ea77402266bd3b146bca063fbf2fa2098d822fe1f11d0.zip",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
+        }
+      }
+    },
+    "f7caabf9d73dcf1750e6f48219df0abd1532a2711434b12d56acdaab309a65dd": {
+      "source": {
+        "path": "RoughHomeworkStack.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "current_account-current_region": {
+          "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}",
+          "objectKey": "f7caabf9d73dcf1750e6f48219df0abd1532a2711434b12d56acdaab309a65dd.json",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}
