@@ -1,27 +1,27 @@
 {
   "version": "29.0.0",
   "artifacts": {
-    "RoughHomeworkStack.assets": {
+    "NewCdk.assets": {
       "type": "cdk:asset-manifest",
       "properties": {
-        "file": "RoughHomeworkStack.assets.json",
+        "file": "NewCdk.assets.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
       }
     },
-    "RoughHomeworkStack": {
+    "NewCdk": {
       "type": "aws:cloudformation:stack",
       "environment": "aws://unknown-account/unknown-region",
       "properties": {
-        "templateFile": "RoughHomeworkStack.template.json",
+        "templateFile": "NewCdk.template.json",
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/f7caabf9d73dcf1750e6f48219df0abd1532a2711434b12d56acdaab309a65dd.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/1e4d269ae80546c5fdd40e0dfa9f52c48172003cd3c804f884752030c715e65d.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
-          "RoughHomeworkStack.assets"
+          "NewCdk.assets"
         ],
         "lookupRole": {
           "arn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-lookup-role-${AWS::AccountId}-${AWS::Region}",
@@ -30,131 +30,191 @@
         }
       },
       "dependencies": [
-        "RoughHomeworkStack.assets"
+        "NewCdk.assets"
       ],
       "metadata": {
-        "/RoughHomeworkStack/HelloLambda/ServiceRole/Resource": [
+        "/NewCdk/EmailQueue/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EmailQueue9C1DA90F"
+          }
+        ],
+        "/NewCdk/ProcessUserLambda/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ProcessUserLambdaServiceRole43827075"
+          }
+        ],
+        "/NewCdk/ProcessUserLambda/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ProcessUserLambdaServiceRoleDefaultPolicyA26B3E0F"
+          }
+        ],
+        "/NewCdk/ProcessUserLambda/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ProcessUserLambda85270098"
+          }
+        ],
+        "/NewCdk/ProcessUserLambda/SqsEventSource:NewCdkEmailQueue5D032671/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ProcessUserLambdaSqsEventSourceNewCdkEmailQueue5D03267111E99878"
+          }
+        ],
+        "/NewCdk/UserTable/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UserTableBD4BF69E"
+          }
+        ],
+        "/NewCdk/HelloLambda/ServiceRole/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "HelloLambdaServiceRoleE071F162"
           }
         ],
-        "/RoughHomeworkStack/HelloLambda/Resource": [
+        "/NewCdk/HelloLambda/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "HelloLambda3D9C82D6"
           }
         ],
-        "/RoughHomeworkStack/newOrder/ServiceRole/Resource": [
+        "/NewCdk/CreateUserLambda/ServiceRole/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "newOrderServiceRole0EF5CC83"
+            "data": "CreateUserLambdaServiceRoleAFE39E4A"
           }
         ],
-        "/RoughHomeworkStack/newOrder/Resource": [
+        "/NewCdk/CreateUserLambda/ServiceRole/DefaultPolicy/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "newOrder9C6E636A"
+            "data": "CreateUserLambdaServiceRoleDefaultPolicyC1FA6D44"
           }
         ],
-        "/RoughHomeworkStack/example-api/Resource": [
+        "/NewCdk/CreateUserLambda/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "exampleapi2D2ED469"
+            "data": "CreateUserLambda0154A2EB"
           }
         ],
-        "/RoughHomeworkStack/example-api/Deployment/Resource": [
+        "/NewCdk/EmailServiceApi/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "exampleapiDeploymentA1494E3B64d02fd9ca8c40d65898cc1aae891d84"
+            "data": "EmailServiceApi9D0DF441"
           }
         ],
-        "/RoughHomeworkStack/example-api/DeploymentStage.prod/Resource": [
+        "/NewCdk/EmailServiceApi/CloudWatchRole/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "exampleapiDeploymentStageprodE9D13C13"
+            "data": "EmailServiceApiCloudWatchRole4C25BBFC"
           }
         ],
-        "/RoughHomeworkStack/example-api/Endpoint": [
+        "/NewCdk/EmailServiceApi/Account": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "exampleapiEndpoint9C2B6BF5"
+            "data": "EmailServiceApiAccount5C359E3E"
           }
         ],
-        "/RoughHomeworkStack/example-api/Default/hello/Resource": [
+        "/NewCdk/EmailServiceApi/Deployment/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "exampleapihello9FEE94A5"
+            "data": "EmailServiceApiDeploymentF26B0FD355127c0cc4bb1e74a7506bb6fca1a46b"
           }
         ],
-        "/RoughHomeworkStack/example-api/Default/hello/GET/ApiPermission.RoughHomeworkStackexampleapi9DB15276.GET..hello": [
+        "/NewCdk/EmailServiceApi/DeploymentStage.prod/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "exampleapihelloGETApiPermissionRoughHomeworkStackexampleapi9DB15276GEThelloC366EA4A"
+            "data": "EmailServiceApiDeploymentStageprod7A348F9F"
           }
         ],
-        "/RoughHomeworkStack/example-api/Default/hello/GET/ApiPermission.Test.RoughHomeworkStackexampleapi9DB15276.GET..hello": [
+        "/NewCdk/EmailServiceApi/Endpoint": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "exampleapihelloGETApiPermissionTestRoughHomeworkStackexampleapi9DB15276GEThelloCD362683"
+            "data": "EmailServiceApiEndpointF510DBDF"
           }
         ],
-        "/RoughHomeworkStack/example-api/Default/hello/GET/Resource": [
+        "/NewCdk/EmailServiceApi/Default/hello/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "exampleapihelloGET283B9A10"
+            "data": "EmailServiceApihelloD695ED60"
           }
         ],
-        "/RoughHomeworkStack/example-api/Default/new-order/Resource": [
+        "/NewCdk/EmailServiceApi/Default/hello/GET/ApiPermission.NewCdkEmailServiceApi5068D60B.GET..hello": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "exampleapineworderFC94C1B0"
+            "data": "EmailServiceApihelloGETApiPermissionNewCdkEmailServiceApi5068D60BGEThello39BE7F62"
           }
         ],
-        "/RoughHomeworkStack/example-api/Default/new-order/GET/ApiPermission.RoughHomeworkStackexampleapi9DB15276.GET..new-order": [
+        "/NewCdk/EmailServiceApi/Default/hello/GET/ApiPermission.Test.NewCdkEmailServiceApi5068D60B.GET..hello": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "exampleapineworderGETApiPermissionRoughHomeworkStackexampleapi9DB15276GETneworder7CCF0061"
+            "data": "EmailServiceApihelloGETApiPermissionTestNewCdkEmailServiceApi5068D60BGEThelloDD321A6D"
           }
         ],
-        "/RoughHomeworkStack/example-api/Default/new-order/GET/ApiPermission.Test.RoughHomeworkStackexampleapi9DB15276.GET..new-order": [
+        "/NewCdk/EmailServiceApi/Default/hello/GET/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "exampleapineworderGETApiPermissionTestRoughHomeworkStackexampleapi9DB15276GETneworder73A64C0D"
+            "data": "EmailServiceApihelloGETAC9DD1B4"
           }
         ],
-        "/RoughHomeworkStack/example-api/Default/new-order/GET/Resource": [
+        "/NewCdk/EmailServiceApi/Default/user/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "exampleapineworderGET18F49A6B"
+            "data": "EmailServiceApiuser9652CD5B"
           }
         ],
-        "/RoughHomeworkStack/CDKMetadata/Default": [
+        "/NewCdk/EmailServiceApi/Default/user/new/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EmailServiceApiusernewC5FD8006"
+          }
+        ],
+        "/NewCdk/EmailServiceApi/Default/user/new/POST/ApiPermission.NewCdkEmailServiceApi5068D60B.POST..user.new": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EmailServiceApiusernewPOSTApiPermissionNewCdkEmailServiceApi5068D60BPOSTusernew76A649D6"
+          }
+        ],
+        "/NewCdk/EmailServiceApi/Default/user/new/POST/ApiPermission.Test.NewCdkEmailServiceApi5068D60B.POST..user.new": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EmailServiceApiusernewPOSTApiPermissionTestNewCdkEmailServiceApi5068D60BPOSTusernewFB3A4058"
+          }
+        ],
+        "/NewCdk/EmailServiceApi/Default/user/new/POST/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "EmailServiceApiusernewPOST39715BA4"
+          }
+        ],
+        "/NewCdk/CDKMetadata/Default": [
           {
             "type": "aws:cdk:logicalId",
             "data": "CDKMetadata"
           }
         ],
-        "/RoughHomeworkStack/CDKMetadata/Condition": [
+        "/NewCdk/CDKMetadata/Condition": [
           {
             "type": "aws:cdk:logicalId",
             "data": "CDKMetadataAvailable"
           }
         ],
-        "/RoughHomeworkStack/BootstrapVersion": [
+        "/NewCdk/BootstrapVersion": [
           {
             "type": "aws:cdk:logicalId",
             "data": "BootstrapVersion"
           }
         ],
-        "/RoughHomeworkStack/CheckBootstrapVersion": [
+        "/NewCdk/CheckBootstrapVersion": [
           {
             "type": "aws:cdk:logicalId",
             "data": "CheckBootstrapVersion"
           }
         ]
       },
-      "displayName": "RoughHomeworkStack"
+      "displayName": "NewCdk"
     },
     "Tree": {
       "type": "cdk:tree",

@@ -4,21 +4,46 @@
     "id": "App",
     "path": "",
     "children": {
-      "RoughHomeworkStack": {
-        "id": "RoughHomeworkStack",
-        "path": "RoughHomeworkStack",
+      "NewCdk": {
+        "id": "NewCdk",
+        "path": "NewCdk",
         "children": {
-          "HelloLambda": {
-            "id": "HelloLambda",
-            "path": "RoughHomeworkStack/HelloLambda",
+          "EmailQueue": {
+            "id": "EmailQueue",
+            "path": "NewCdk/EmailQueue",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "NewCdk/EmailQueue/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::SQS::Queue",
+                  "aws:cdk:cloudformation:props": {
+                    "queueName": "user-email-queue",
+                    "visibilityTimeout": 45
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_sqs.CfnQueue",
+                  "version": "2.63.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_sqs.Queue",
+              "version": "2.63.1"
+            }
+          },
+          "ProcessUserLambda": {
+            "id": "ProcessUserLambda",
+            "path": "NewCdk/ProcessUserLambda",
             "children": {
               "ServiceRole": {
                 "id": "ServiceRole",
-                "path": "RoughHomeworkStack/HelloLambda/ServiceRole",
+                "path": "NewCdk/ProcessUserLambda/ServiceRole",
                 "children": {
                   "ImportServiceRole": {
                     "id": "ImportServiceRole",
-                    "path": "RoughHomeworkStack/HelloLambda/ServiceRole/ImportServiceRole",
+                    "path": "NewCdk/ProcessUserLambda/ServiceRole/ImportServiceRole",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.Resource",
                       "version": "2.63.1"
@@ -26,7 +51,271 @@
                   },
                   "Resource": {
                     "id": "Resource",
-                    "path": "RoughHomeworkStack/HelloLambda/ServiceRole/Resource",
+                    "path": "NewCdk/ProcessUserLambda/ServiceRole/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                      "aws:cdk:cloudformation:props": {
+                        "assumeRolePolicyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "sts:AssumeRole",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "Service": "lambda.amazonaws.com"
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "managedPolicyArns": [
+                          {
+                            "Fn::Join": [
+                              "",
+                              [
+                                "arn:",
+                                {
+                                  "Ref": "AWS::Partition"
+                                },
+                                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+                              ]
+                            ]
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                      "version": "2.63.1"
+                    }
+                  },
+                  "DefaultPolicy": {
+                    "id": "DefaultPolicy",
+                    "path": "NewCdk/ProcessUserLambda/ServiceRole/DefaultPolicy",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "NewCdk/ProcessUserLambda/ServiceRole/DefaultPolicy/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                          "aws:cdk:cloudformation:props": {
+                            "policyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": [
+                                    "sqs:ChangeMessageVisibility",
+                                    "sqs:DeleteMessage",
+                                    "sqs:GetQueueAttributes",
+                                    "sqs:GetQueueUrl",
+                                    "sqs:ReceiveMessage"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": {
+                                    "Fn::GetAtt": [
+                                      "EmailQueue9C1DA90F",
+                                      "Arn"
+                                    ]
+                                  }
+                                },
+                                {
+                                  "Action": [
+                                    "ses:SendEmail",
+                                    "ses:SendRawEmail",
+                                    "ses:SendTemplatedEmail"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": "*",
+                                  "Sid": "SendEmailPolicySid"
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "policyName": "ProcessUserLambdaServiceRoleDefaultPolicyA26B3E0F",
+                            "roles": [
+                              {
+                                "Ref": "ProcessUserLambdaServiceRole43827075"
+                              }
+                            ]
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                          "version": "2.63.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.Policy",
+                      "version": "2.63.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Role",
+                  "version": "2.63.1"
+                }
+              },
+              "Code": {
+                "id": "Code",
+                "path": "NewCdk/ProcessUserLambda/Code",
+                "children": {
+                  "Stage": {
+                    "id": "Stage",
+                    "path": "NewCdk/ProcessUserLambda/Code/Stage",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.AssetStaging",
+                      "version": "2.63.1"
+                    }
+                  },
+                  "AssetBucket": {
+                    "id": "AssetBucket",
+                    "path": "NewCdk/ProcessUserLambda/Code/AssetBucket",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3.BucketBase",
+                      "version": "2.63.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_s3_assets.Asset",
+                  "version": "2.63.1"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "NewCdk/ProcessUserLambda/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
+                  "aws:cdk:cloudformation:props": {
+                    "code": {
+                      "s3Bucket": {
+                        "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+                      },
+                      "s3Key": "2d1acb280234ed6f9d8b5718e6c319bc7be5937ef642ff3bb30df365d5845688.zip"
+                    },
+                    "role": {
+                      "Fn::GetAtt": [
+                        "ProcessUserLambdaServiceRole43827075",
+                        "Arn"
+                      ]
+                    },
+                    "handler": "lambdas.processUser",
+                    "runtime": "nodejs16.x"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.CfnFunction",
+                  "version": "2.63.1"
+                }
+              },
+              "SqsEventSource:NewCdkEmailQueue5D032671": {
+                "id": "SqsEventSource:NewCdkEmailQueue5D032671",
+                "path": "NewCdk/ProcessUserLambda/SqsEventSource:NewCdkEmailQueue5D032671",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "NewCdk/ProcessUserLambda/SqsEventSource:NewCdkEmailQueue5D032671/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::Lambda::EventSourceMapping",
+                      "aws:cdk:cloudformation:props": {
+                        "functionName": {
+                          "Ref": "ProcessUserLambda85270098"
+                        },
+                        "batchSize": 10,
+                        "enabled": true,
+                        "eventSourceArn": {
+                          "Fn::GetAtt": [
+                            "EmailQueue9C1DA90F",
+                            "Arn"
+                          ]
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_lambda.CfnEventSourceMapping",
+                      "version": "2.63.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.EventSourceMapping",
+                  "version": "2.63.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_lambda.Function",
+              "version": "2.63.1"
+            }
+          },
+          "UserTable": {
+            "id": "UserTable",
+            "path": "NewCdk/UserTable",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "NewCdk/UserTable/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::DynamoDB::Table",
+                  "aws:cdk:cloudformation:props": {
+                    "keySchema": [
+                      {
+                        "attributeName": "userId",
+                        "keyType": "HASH"
+                      }
+                    ],
+                    "attributeDefinitions": [
+                      {
+                        "attributeName": "userId",
+                        "attributeType": "S"
+                      }
+                    ],
+                    "billingMode": "PAY_PER_REQUEST",
+                    "pointInTimeRecoverySpecification": {
+                      "pointInTimeRecoveryEnabled": false
+                    },
+                    "sseSpecification": {
+                      "sseEnabled": false
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_dynamodb.CfnTable",
+                  "version": "2.63.1"
+                }
+              },
+              "ScalingRole": {
+                "id": "ScalingRole",
+                "path": "NewCdk/UserTable/ScalingRole",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.63.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_dynamodb.Table",
+              "version": "2.63.1"
+            }
+          },
+          "HelloLambda": {
+            "id": "HelloLambda",
+            "path": "NewCdk/HelloLambda",
+            "children": {
+              "ServiceRole": {
+                "id": "ServiceRole",
+                "path": "NewCdk/HelloLambda/ServiceRole",
+                "children": {
+                  "ImportServiceRole": {
+                    "id": "ImportServiceRole",
+                    "path": "NewCdk/HelloLambda/ServiceRole/ImportServiceRole",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.Resource",
+                      "version": "2.63.1"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "NewCdk/HelloLambda/ServiceRole/Resource",
                     "attributes": {
                       "aws:cdk:cloudformation:type": "AWS::IAM::Role",
                       "aws:cdk:cloudformation:props": {
@@ -71,11 +360,11 @@
               },
               "Code": {
                 "id": "Code",
-                "path": "RoughHomeworkStack/HelloLambda/Code",
+                "path": "NewCdk/HelloLambda/Code",
                 "children": {
                   "Stage": {
                     "id": "Stage",
-                    "path": "RoughHomeworkStack/HelloLambda/Code/Stage",
+                    "path": "NewCdk/HelloLambda/Code/Stage",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.AssetStaging",
                       "version": "2.63.1"
@@ -83,7 +372,7 @@
                   },
                   "AssetBucket": {
                     "id": "AssetBucket",
-                    "path": "RoughHomeworkStack/HelloLambda/Code/AssetBucket",
+                    "path": "NewCdk/HelloLambda/Code/AssetBucket",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.aws_s3.BucketBase",
                       "version": "2.63.1"
@@ -97,7 +386,7 @@
               },
               "Resource": {
                 "id": "Resource",
-                "path": "RoughHomeworkStack/HelloLambda/Resource",
+                "path": "NewCdk/HelloLambda/Resource",
                 "attributes": {
                   "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
                   "aws:cdk:cloudformation:props": {
@@ -105,7 +394,7 @@
                       "s3Bucket": {
                         "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
                       },
-                      "s3Key": "2849533a44759cd5762ea77402266bd3b146bca063fbf2fa2098d822fe1f11d0.zip"
+                      "s3Key": "2d1acb280234ed6f9d8b5718e6c319bc7be5937ef642ff3bb30df365d5845688.zip"
                     },
                     "role": {
                       "Fn::GetAtt": [
@@ -113,8 +402,10 @@
                         "Arn"
                       ]
                     },
-                    "handler": "lambda-function.handler",
-                    "runtime": "nodejs10.x"
+                    "handler": "lambdas.hello",
+                    "memorySize": 256,
+                    "runtime": "nodejs16.x",
+                    "timeout": 10
                   }
                 },
                 "constructInfo": {
@@ -128,17 +419,17 @@
               "version": "2.63.1"
             }
           },
-          "newOrder": {
-            "id": "newOrder",
-            "path": "RoughHomeworkStack/newOrder",
+          "CreateUserLambda": {
+            "id": "CreateUserLambda",
+            "path": "NewCdk/CreateUserLambda",
             "children": {
               "ServiceRole": {
                 "id": "ServiceRole",
-                "path": "RoughHomeworkStack/newOrder/ServiceRole",
+                "path": "NewCdk/CreateUserLambda/ServiceRole",
                 "children": {
                   "ImportServiceRole": {
                     "id": "ImportServiceRole",
-                    "path": "RoughHomeworkStack/newOrder/ServiceRole/ImportServiceRole",
+                    "path": "NewCdk/CreateUserLambda/ServiceRole/ImportServiceRole",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.Resource",
                       "version": "2.63.1"
@@ -146,7 +437,7 @@
                   },
                   "Resource": {
                     "id": "Resource",
-                    "path": "RoughHomeworkStack/newOrder/ServiceRole/Resource",
+                    "path": "NewCdk/CreateUserLambda/ServiceRole/Resource",
                     "attributes": {
                       "aws:cdk:cloudformation:type": "AWS::IAM::Role",
                       "aws:cdk:cloudformation:props": {
@@ -182,6 +473,75 @@
                       "fqn": "aws-cdk-lib.aws_iam.CfnRole",
                       "version": "2.63.1"
                     }
+                  },
+                  "DefaultPolicy": {
+                    "id": "DefaultPolicy",
+                    "path": "NewCdk/CreateUserLambda/ServiceRole/DefaultPolicy",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "NewCdk/CreateUserLambda/ServiceRole/DefaultPolicy/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                          "aws:cdk:cloudformation:props": {
+                            "policyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": [
+                                    "dynamodb:BatchWriteItem",
+                                    "dynamodb:DeleteItem",
+                                    "dynamodb:DescribeTable",
+                                    "dynamodb:PutItem",
+                                    "dynamodb:UpdateItem"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": [
+                                    {
+                                      "Fn::GetAtt": [
+                                        "UserTableBD4BF69E",
+                                        "Arn"
+                                      ]
+                                    },
+                                    {
+                                      "Ref": "AWS::NoValue"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "Action": [
+                                    "sqs:GetQueueAttributes",
+                                    "sqs:GetQueueUrl",
+                                    "sqs:SendMessage"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": {
+                                    "Fn::GetAtt": [
+                                      "EmailQueue9C1DA90F",
+                                      "Arn"
+                                    ]
+                                  }
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "policyName": "CreateUserLambdaServiceRoleDefaultPolicyC1FA6D44",
+                            "roles": [
+                              {
+                                "Ref": "CreateUserLambdaServiceRoleAFE39E4A"
+                              }
+                            ]
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                          "version": "2.63.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.Policy",
+                      "version": "2.63.1"
+                    }
                   }
                 },
                 "constructInfo": {
@@ -191,11 +551,11 @@
               },
               "Code": {
                 "id": "Code",
-                "path": "RoughHomeworkStack/newOrder/Code",
+                "path": "NewCdk/CreateUserLambda/Code",
                 "children": {
                   "Stage": {
                     "id": "Stage",
-                    "path": "RoughHomeworkStack/newOrder/Code/Stage",
+                    "path": "NewCdk/CreateUserLambda/Code/Stage",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.AssetStaging",
                       "version": "2.63.1"
@@ -203,7 +563,7 @@
                   },
                   "AssetBucket": {
                     "id": "AssetBucket",
-                    "path": "RoughHomeworkStack/newOrder/Code/AssetBucket",
+                    "path": "NewCdk/CreateUserLambda/Code/AssetBucket",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.aws_s3.BucketBase",
                       "version": "2.63.1"
@@ -217,7 +577,7 @@
               },
               "Resource": {
                 "id": "Resource",
-                "path": "RoughHomeworkStack/newOrder/Resource",
+                "path": "NewCdk/CreateUserLambda/Resource",
                 "attributes": {
                   "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
                   "aws:cdk:cloudformation:props": {
@@ -225,16 +585,28 @@
                       "s3Bucket": {
                         "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
                       },
-                      "s3Key": "2849533a44759cd5762ea77402266bd3b146bca063fbf2fa2098d822fe1f11d0.zip"
+                      "s3Key": "2d1acb280234ed6f9d8b5718e6c319bc7be5937ef642ff3bb30df365d5845688.zip"
                     },
                     "role": {
                       "Fn::GetAtt": [
-                        "newOrderServiceRole0EF5CC83",
+                        "CreateUserLambdaServiceRoleAFE39E4A",
                         "Arn"
                       ]
                     },
-                    "handler": "lambda-function.newOrder",
-                    "runtime": "nodejs10.x"
+                    "environment": {
+                      "variables": {
+                        "TABLE_NAME": {
+                          "Ref": "UserTableBD4BF69E"
+                        },
+                        "EMAIL_PROCESSING_QUEUE_URL": {
+                          "Ref": "EmailQueue9C1DA90F"
+                        }
+                      }
+                    },
+                    "handler": "lambdas.createUser",
+                    "memorySize": 256,
+                    "runtime": "nodejs16.x",
+                    "timeout": 10
                   }
                 },
                 "constructInfo": {
@@ -248,17 +620,17 @@
               "version": "2.63.1"
             }
           },
-          "example-api": {
-            "id": "example-api",
-            "path": "RoughHomeworkStack/example-api",
+          "EmailServiceApi": {
+            "id": "EmailServiceApi",
+            "path": "NewCdk/EmailServiceApi",
             "children": {
               "Resource": {
                 "id": "Resource",
-                "path": "RoughHomeworkStack/example-api/Resource",
+                "path": "NewCdk/EmailServiceApi/Resource",
                 "attributes": {
                   "aws:cdk:cloudformation:type": "AWS::ApiGateway::RestApi",
                   "aws:cdk:cloudformation:props": {
-                    "name": "Example API"
+                    "name": "EmailService"
                   }
                 },
                 "constructInfo": {
@@ -266,18 +638,94 @@
                   "version": "2.63.1"
                 }
               },
+              "CloudWatchRole": {
+                "id": "CloudWatchRole",
+                "path": "NewCdk/EmailServiceApi/CloudWatchRole",
+                "children": {
+                  "ImportCloudWatchRole": {
+                    "id": "ImportCloudWatchRole",
+                    "path": "NewCdk/EmailServiceApi/CloudWatchRole/ImportCloudWatchRole",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.Resource",
+                      "version": "2.63.1"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "NewCdk/EmailServiceApi/CloudWatchRole/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                      "aws:cdk:cloudformation:props": {
+                        "assumeRolePolicyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "sts:AssumeRole",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "Service": "apigateway.amazonaws.com"
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "managedPolicyArns": [
+                          {
+                            "Fn::Join": [
+                              "",
+                              [
+                                "arn:",
+                                {
+                                  "Ref": "AWS::Partition"
+                                },
+                                ":iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"
+                              ]
+                            ]
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                      "version": "2.63.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Role",
+                  "version": "2.63.1"
+                }
+              },
+              "Account": {
+                "id": "Account",
+                "path": "NewCdk/EmailServiceApi/Account",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ApiGateway::Account",
+                  "aws:cdk:cloudformation:props": {
+                    "cloudWatchRoleArn": {
+                      "Fn::GetAtt": [
+                        "EmailServiceApiCloudWatchRole4C25BBFC",
+                        "Arn"
+                      ]
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_apigateway.CfnAccount",
+                  "version": "2.63.1"
+                }
+              },
               "Deployment": {
                 "id": "Deployment",
-                "path": "RoughHomeworkStack/example-api/Deployment",
+                "path": "NewCdk/EmailServiceApi/Deployment",
                 "children": {
                   "Resource": {
                     "id": "Resource",
-                    "path": "RoughHomeworkStack/example-api/Deployment/Resource",
+                    "path": "NewCdk/EmailServiceApi/Deployment/Resource",
                     "attributes": {
                       "aws:cdk:cloudformation:type": "AWS::ApiGateway::Deployment",
                       "aws:cdk:cloudformation:props": {
                         "restApiId": {
-                          "Ref": "exampleapi2D2ED469"
+                          "Ref": "EmailServiceApi9D0DF441"
                         },
                         "description": "Automatically created by the RestApi construct"
                       }
@@ -295,19 +743,19 @@
               },
               "DeploymentStage.prod": {
                 "id": "DeploymentStage.prod",
-                "path": "RoughHomeworkStack/example-api/DeploymentStage.prod",
+                "path": "NewCdk/EmailServiceApi/DeploymentStage.prod",
                 "children": {
                   "Resource": {
                     "id": "Resource",
-                    "path": "RoughHomeworkStack/example-api/DeploymentStage.prod/Resource",
+                    "path": "NewCdk/EmailServiceApi/DeploymentStage.prod/Resource",
                     "attributes": {
                       "aws:cdk:cloudformation:type": "AWS::ApiGateway::Stage",
                       "aws:cdk:cloudformation:props": {
                         "restApiId": {
-                          "Ref": "exampleapi2D2ED469"
+                          "Ref": "EmailServiceApi9D0DF441"
                         },
                         "deploymentId": {
-                          "Ref": "exampleapiDeploymentA1494E3B64d02fd9ca8c40d65898cc1aae891d84"
+                          "Ref": "EmailServiceApiDeploymentF26B0FD355127c0cc4bb1e74a7506bb6fca1a46b"
                         },
                         "stageName": "prod"
                       }
@@ -325,7 +773,7 @@
               },
               "Endpoint": {
                 "id": "Endpoint",
-                "path": "RoughHomeworkStack/example-api/Endpoint",
+                "path": "NewCdk/EmailServiceApi/Endpoint",
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.CfnOutput",
                   "version": "2.63.1"
@@ -333,27 +781,27 @@
               },
               "Default": {
                 "id": "Default",
-                "path": "RoughHomeworkStack/example-api/Default",
+                "path": "NewCdk/EmailServiceApi/Default",
                 "children": {
                   "hello": {
                     "id": "hello",
-                    "path": "RoughHomeworkStack/example-api/Default/hello",
+                    "path": "NewCdk/EmailServiceApi/Default/hello",
                     "children": {
                       "Resource": {
                         "id": "Resource",
-                        "path": "RoughHomeworkStack/example-api/Default/hello/Resource",
+                        "path": "NewCdk/EmailServiceApi/Default/hello/Resource",
                         "attributes": {
                           "aws:cdk:cloudformation:type": "AWS::ApiGateway::Resource",
                           "aws:cdk:cloudformation:props": {
                             "parentId": {
                               "Fn::GetAtt": [
-                                "exampleapi2D2ED469",
+                                "EmailServiceApi9D0DF441",
                                 "RootResourceId"
                               ]
                             },
                             "pathPart": "hello",
                             "restApiId": {
-                              "Ref": "exampleapi2D2ED469"
+                              "Ref": "EmailServiceApi9D0DF441"
                             }
                           }
                         },
@@ -364,11 +812,11 @@
                       },
                       "GET": {
                         "id": "GET",
-                        "path": "RoughHomeworkStack/example-api/Default/hello/GET",
+                        "path": "NewCdk/EmailServiceApi/Default/hello/GET",
                         "children": {
-                          "ApiPermission.RoughHomeworkStackexampleapi9DB15276.GET..hello": {
-                            "id": "ApiPermission.RoughHomeworkStackexampleapi9DB15276.GET..hello",
-                            "path": "RoughHomeworkStack/example-api/Default/hello/GET/ApiPermission.RoughHomeworkStackexampleapi9DB15276.GET..hello",
+                          "ApiPermission.NewCdkEmailServiceApi5068D60B.GET..hello": {
+                            "id": "ApiPermission.NewCdkEmailServiceApi5068D60B.GET..hello",
+                            "path": "NewCdk/EmailServiceApi/Default/hello/GET/ApiPermission.NewCdkEmailServiceApi5068D60B.GET..hello",
                             "attributes": {
                               "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
                               "aws:cdk:cloudformation:props": {
@@ -398,11 +846,11 @@
                                       },
                                       ":",
                                       {
-                                        "Ref": "exampleapi2D2ED469"
+                                        "Ref": "EmailServiceApi9D0DF441"
                                       },
                                       "/",
                                       {
-                                        "Ref": "exampleapiDeploymentStageprodE9D13C13"
+                                        "Ref": "EmailServiceApiDeploymentStageprod7A348F9F"
                                       },
                                       "/GET/hello"
                                     ]
@@ -415,9 +863,9 @@
                               "version": "2.63.1"
                             }
                           },
-                          "ApiPermission.Test.RoughHomeworkStackexampleapi9DB15276.GET..hello": {
-                            "id": "ApiPermission.Test.RoughHomeworkStackexampleapi9DB15276.GET..hello",
-                            "path": "RoughHomeworkStack/example-api/Default/hello/GET/ApiPermission.Test.RoughHomeworkStackexampleapi9DB15276.GET..hello",
+                          "ApiPermission.Test.NewCdkEmailServiceApi5068D60B.GET..hello": {
+                            "id": "ApiPermission.Test.NewCdkEmailServiceApi5068D60B.GET..hello",
+                            "path": "NewCdk/EmailServiceApi/Default/hello/GET/ApiPermission.Test.NewCdkEmailServiceApi5068D60B.GET..hello",
                             "attributes": {
                               "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
                               "aws:cdk:cloudformation:props": {
@@ -447,7 +895,7 @@
                                       },
                                       ":",
                                       {
-                                        "Ref": "exampleapi2D2ED469"
+                                        "Ref": "EmailServiceApi9D0DF441"
                                       },
                                       "/test-invoke-stage/GET/hello"
                                     ]
@@ -462,20 +910,20 @@
                           },
                           "Resource": {
                             "id": "Resource",
-                            "path": "RoughHomeworkStack/example-api/Default/hello/GET/Resource",
+                            "path": "NewCdk/EmailServiceApi/Default/hello/GET/Resource",
                             "attributes": {
                               "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
                               "aws:cdk:cloudformation:props": {
                                 "httpMethod": "GET",
                                 "resourceId": {
-                                  "Ref": "exampleapihello9FEE94A5"
+                                  "Ref": "EmailServiceApihelloD695ED60"
                                 },
                                 "restApiId": {
-                                  "Ref": "exampleapi2D2ED469"
+                                  "Ref": "EmailServiceApi9D0DF441"
                                 },
                                 "authorizationType": "NONE",
                                 "integration": {
-                                  "type": "AWS",
+                                  "type": "AWS_PROXY",
                                   "uri": {
                                     "Fn::Join": [
                                       "",
@@ -520,25 +968,25 @@
                       "version": "2.63.1"
                     }
                   },
-                  "new-order": {
-                    "id": "new-order",
-                    "path": "RoughHomeworkStack/example-api/Default/new-order",
+                  "user": {
+                    "id": "user",
+                    "path": "NewCdk/EmailServiceApi/Default/user",
                     "children": {
                       "Resource": {
                         "id": "Resource",
-                        "path": "RoughHomeworkStack/example-api/Default/new-order/Resource",
+                        "path": "NewCdk/EmailServiceApi/Default/user/Resource",
                         "attributes": {
                           "aws:cdk:cloudformation:type": "AWS::ApiGateway::Resource",
                           "aws:cdk:cloudformation:props": {
                             "parentId": {
                               "Fn::GetAtt": [
-                                "exampleapi2D2ED469",
+                                "EmailServiceApi9D0DF441",
                                 "RootResourceId"
                               ]
                             },
-                            "pathPart": "new-order",
+                            "pathPart": "user",
                             "restApiId": {
-                              "Ref": "exampleapi2D2ED469"
+                              "Ref": "EmailServiceApi9D0DF441"
                             }
                           }
                         },
@@ -547,155 +995,185 @@
                           "version": "2.63.1"
                         }
                       },
-                      "GET": {
-                        "id": "GET",
-                        "path": "RoughHomeworkStack/example-api/Default/new-order/GET",
+                      "new": {
+                        "id": "new",
+                        "path": "NewCdk/EmailServiceApi/Default/user/new",
                         "children": {
-                          "ApiPermission.RoughHomeworkStackexampleapi9DB15276.GET..new-order": {
-                            "id": "ApiPermission.RoughHomeworkStackexampleapi9DB15276.GET..new-order",
-                            "path": "RoughHomeworkStack/example-api/Default/new-order/GET/ApiPermission.RoughHomeworkStackexampleapi9DB15276.GET..new-order",
-                            "attributes": {
-                              "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
-                              "aws:cdk:cloudformation:props": {
-                                "action": "lambda:InvokeFunction",
-                                "functionName": {
-                                  "Fn::GetAtt": [
-                                    "newOrder9C6E636A",
-                                    "Arn"
-                                  ]
-                                },
-                                "principal": "apigateway.amazonaws.com",
-                                "sourceArn": {
-                                  "Fn::Join": [
-                                    "",
-                                    [
-                                      "arn:",
-                                      {
-                                        "Ref": "AWS::Partition"
-                                      },
-                                      ":execute-api:",
-                                      {
-                                        "Ref": "AWS::Region"
-                                      },
-                                      ":",
-                                      {
-                                        "Ref": "AWS::AccountId"
-                                      },
-                                      ":",
-                                      {
-                                        "Ref": "exampleapi2D2ED469"
-                                      },
-                                      "/",
-                                      {
-                                        "Ref": "exampleapiDeploymentStageprodE9D13C13"
-                                      },
-                                      "/GET/new-order"
-                                    ]
-                                  ]
-                                }
-                              }
-                            },
-                            "constructInfo": {
-                              "fqn": "aws-cdk-lib.aws_lambda.CfnPermission",
-                              "version": "2.63.1"
-                            }
-                          },
-                          "ApiPermission.Test.RoughHomeworkStackexampleapi9DB15276.GET..new-order": {
-                            "id": "ApiPermission.Test.RoughHomeworkStackexampleapi9DB15276.GET..new-order",
-                            "path": "RoughHomeworkStack/example-api/Default/new-order/GET/ApiPermission.Test.RoughHomeworkStackexampleapi9DB15276.GET..new-order",
-                            "attributes": {
-                              "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
-                              "aws:cdk:cloudformation:props": {
-                                "action": "lambda:InvokeFunction",
-                                "functionName": {
-                                  "Fn::GetAtt": [
-                                    "newOrder9C6E636A",
-                                    "Arn"
-                                  ]
-                                },
-                                "principal": "apigateway.amazonaws.com",
-                                "sourceArn": {
-                                  "Fn::Join": [
-                                    "",
-                                    [
-                                      "arn:",
-                                      {
-                                        "Ref": "AWS::Partition"
-                                      },
-                                      ":execute-api:",
-                                      {
-                                        "Ref": "AWS::Region"
-                                      },
-                                      ":",
-                                      {
-                                        "Ref": "AWS::AccountId"
-                                      },
-                                      ":",
-                                      {
-                                        "Ref": "exampleapi2D2ED469"
-                                      },
-                                      "/test-invoke-stage/GET/new-order"
-                                    ]
-                                  ]
-                                }
-                              }
-                            },
-                            "constructInfo": {
-                              "fqn": "aws-cdk-lib.aws_lambda.CfnPermission",
-                              "version": "2.63.1"
-                            }
-                          },
                           "Resource": {
                             "id": "Resource",
-                            "path": "RoughHomeworkStack/example-api/Default/new-order/GET/Resource",
+                            "path": "NewCdk/EmailServiceApi/Default/user/new/Resource",
                             "attributes": {
-                              "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
+                              "aws:cdk:cloudformation:type": "AWS::ApiGateway::Resource",
                               "aws:cdk:cloudformation:props": {
-                                "httpMethod": "GET",
-                                "resourceId": {
-                                  "Ref": "exampleapineworderFC94C1B0"
+                                "parentId": {
+                                  "Ref": "EmailServiceApiuser9652CD5B"
                                 },
+                                "pathPart": "new",
                                 "restApiId": {
-                                  "Ref": "exampleapi2D2ED469"
-                                },
-                                "authorizationType": "NONE",
-                                "integration": {
-                                  "type": "AWS",
-                                  "uri": {
-                                    "Fn::Join": [
-                                      "",
-                                      [
-                                        "arn:",
-                                        {
-                                          "Ref": "AWS::Partition"
-                                        },
-                                        ":apigateway:",
-                                        {
-                                          "Ref": "AWS::Region"
-                                        },
-                                        ":lambda:path/2015-03-31/functions/",
-                                        {
-                                          "Fn::GetAtt": [
-                                            "newOrder9C6E636A",
-                                            "Arn"
-                                          ]
-                                        },
-                                        "/invocations"
-                                      ]
-                                    ]
-                                  },
-                                  "integrationHttpMethod": "POST"
+                                  "Ref": "EmailServiceApi9D0DF441"
                                 }
                               }
                             },
                             "constructInfo": {
-                              "fqn": "aws-cdk-lib.aws_apigateway.CfnMethod",
+                              "fqn": "aws-cdk-lib.aws_apigateway.CfnResource",
+                              "version": "2.63.1"
+                            }
+                          },
+                          "POST": {
+                            "id": "POST",
+                            "path": "NewCdk/EmailServiceApi/Default/user/new/POST",
+                            "children": {
+                              "ApiPermission.NewCdkEmailServiceApi5068D60B.POST..user.new": {
+                                "id": "ApiPermission.NewCdkEmailServiceApi5068D60B.POST..user.new",
+                                "path": "NewCdk/EmailServiceApi/Default/user/new/POST/ApiPermission.NewCdkEmailServiceApi5068D60B.POST..user.new",
+                                "attributes": {
+                                  "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
+                                  "aws:cdk:cloudformation:props": {
+                                    "action": "lambda:InvokeFunction",
+                                    "functionName": {
+                                      "Fn::GetAtt": [
+                                        "CreateUserLambda0154A2EB",
+                                        "Arn"
+                                      ]
+                                    },
+                                    "principal": "apigateway.amazonaws.com",
+                                    "sourceArn": {
+                                      "Fn::Join": [
+                                        "",
+                                        [
+                                          "arn:",
+                                          {
+                                            "Ref": "AWS::Partition"
+                                          },
+                                          ":execute-api:",
+                                          {
+                                            "Ref": "AWS::Region"
+                                          },
+                                          ":",
+                                          {
+                                            "Ref": "AWS::AccountId"
+                                          },
+                                          ":",
+                                          {
+                                            "Ref": "EmailServiceApi9D0DF441"
+                                          },
+                                          "/",
+                                          {
+                                            "Ref": "EmailServiceApiDeploymentStageprod7A348F9F"
+                                          },
+                                          "/POST/user/new"
+                                        ]
+                                      ]
+                                    }
+                                  }
+                                },
+                                "constructInfo": {
+                                  "fqn": "aws-cdk-lib.aws_lambda.CfnPermission",
+                                  "version": "2.63.1"
+                                }
+                              },
+                              "ApiPermission.Test.NewCdkEmailServiceApi5068D60B.POST..user.new": {
+                                "id": "ApiPermission.Test.NewCdkEmailServiceApi5068D60B.POST..user.new",
+                                "path": "NewCdk/EmailServiceApi/Default/user/new/POST/ApiPermission.Test.NewCdkEmailServiceApi5068D60B.POST..user.new",
+                                "attributes": {
+                                  "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
+                                  "aws:cdk:cloudformation:props": {
+                                    "action": "lambda:InvokeFunction",
+                                    "functionName": {
+                                      "Fn::GetAtt": [
+                                        "CreateUserLambda0154A2EB",
+                                        "Arn"
+                                      ]
+                                    },
+                                    "principal": "apigateway.amazonaws.com",
+                                    "sourceArn": {
+                                      "Fn::Join": [
+                                        "",
+                                        [
+                                          "arn:",
+                                          {
+                                            "Ref": "AWS::Partition"
+                                          },
+                                          ":execute-api:",
+                                          {
+                                            "Ref": "AWS::Region"
+                                          },
+                                          ":",
+                                          {
+                                            "Ref": "AWS::AccountId"
+                                          },
+                                          ":",
+                                          {
+                                            "Ref": "EmailServiceApi9D0DF441"
+                                          },
+                                          "/test-invoke-stage/POST/user/new"
+                                        ]
+                                      ]
+                                    }
+                                  }
+                                },
+                                "constructInfo": {
+                                  "fqn": "aws-cdk-lib.aws_lambda.CfnPermission",
+                                  "version": "2.63.1"
+                                }
+                              },
+                              "Resource": {
+                                "id": "Resource",
+                                "path": "NewCdk/EmailServiceApi/Default/user/new/POST/Resource",
+                                "attributes": {
+                                  "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
+                                  "aws:cdk:cloudformation:props": {
+                                    "httpMethod": "POST",
+                                    "resourceId": {
+                                      "Ref": "EmailServiceApiusernewC5FD8006"
+                                    },
+                                    "restApiId": {
+                                      "Ref": "EmailServiceApi9D0DF441"
+                                    },
+                                    "authorizationType": "NONE",
+                                    "integration": {
+                                      "type": "AWS_PROXY",
+                                      "uri": {
+                                        "Fn::Join": [
+                                          "",
+                                          [
+                                            "arn:",
+                                            {
+                                              "Ref": "AWS::Partition"
+                                            },
+                                            ":apigateway:",
+                                            {
+                                              "Ref": "AWS::Region"
+                                            },
+                                            ":lambda:path/2015-03-31/functions/",
+                                            {
+                                              "Fn::GetAtt": [
+                                                "CreateUserLambda0154A2EB",
+                                                "Arn"
+                                              ]
+                                            },
+                                            "/invocations"
+                                          ]
+                                        ]
+                                      },
+                                      "integrationHttpMethod": "POST"
+                                    }
+                                  }
+                                },
+                                "constructInfo": {
+                                  "fqn": "aws-cdk-lib.aws_apigateway.CfnMethod",
+                                  "version": "2.63.1"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_apigateway.Method",
                               "version": "2.63.1"
                             }
                           }
                         },
                         "constructInfo": {
-                          "fqn": "aws-cdk-lib.aws_apigateway.Method",
+                          "fqn": "aws-cdk-lib.aws_apigateway.Resource",
                           "version": "2.63.1"
                         }
                       }
@@ -719,11 +1197,11 @@
           },
           "CDKMetadata": {
             "id": "CDKMetadata",
-            "path": "RoughHomeworkStack/CDKMetadata",
+            "path": "NewCdk/CDKMetadata",
             "children": {
               "Default": {
                 "id": "Default",
-                "path": "RoughHomeworkStack/CDKMetadata/Default",
+                "path": "NewCdk/CDKMetadata/Default",
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.CfnResource",
                   "version": "2.63.1"
@@ -731,7 +1209,7 @@
               },
               "Condition": {
                 "id": "Condition",
-                "path": "RoughHomeworkStack/CDKMetadata/Condition",
+                "path": "NewCdk/CDKMetadata/Condition",
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.CfnCondition",
                   "version": "2.63.1"
@@ -740,12 +1218,12 @@
             },
             "constructInfo": {
               "fqn": "constructs.Construct",
-              "version": "10.1.240"
+              "version": "10.1.254"
             }
           },
           "BootstrapVersion": {
             "id": "BootstrapVersion",
-            "path": "RoughHomeworkStack/BootstrapVersion",
+            "path": "NewCdk/BootstrapVersion",
             "constructInfo": {
               "fqn": "aws-cdk-lib.CfnParameter",
               "version": "2.63.1"
@@ -753,7 +1231,7 @@
           },
           "CheckBootstrapVersion": {
             "id": "CheckBootstrapVersion",
-            "path": "RoughHomeworkStack/CheckBootstrapVersion",
+            "path": "NewCdk/CheckBootstrapVersion",
             "constructInfo": {
               "fqn": "aws-cdk-lib.CfnRule",
               "version": "2.63.1"
@@ -770,7 +1248,7 @@
         "path": "Tree",
         "constructInfo": {
           "fqn": "constructs.Construct",
-          "version": "10.1.240"
+          "version": "10.1.254"
         }
       }
     },
